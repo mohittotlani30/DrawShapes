@@ -27,13 +27,11 @@ class ViewController: UIViewController {
         if let touch = touches.first {
             
             startPoint = touch.location(in: view)
-            print(startPoint!)
         }
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = touches.first {
             endPoint = touch.location(in: view)
-            print(endPoint!)
             drawRectangle()
             
         }
@@ -63,7 +61,7 @@ class ViewController: UIViewController {
         }
         
         do {
-            let rectangleLayer = try getPathPayer(arrPathPoints: [topLeft, topRight, bottomRight, bottomLeft])
+            let rectangleLayer = try getRectangle(rectPoints: [topLeft, topRight, bottomRight, bottomLeft])
             rectView.layer.addSublayer(rectangleLayer)
         } catch {
             debugPrint(error)
@@ -72,12 +70,12 @@ class ViewController: UIViewController {
         
     }
     
-    func getPathPayer(arrPathPoints:[CGPoint]) throws -> CAShapeLayer {
+    func getRectangle(rectPoints:[CGPoint]) throws -> CAShapeLayer {
         enum PathError : Error{
             case moreThan2PointsNeeded
         }
         
-        guard arrPathPoints.count > 2 else {
+        guard rectPoints.count > 2 else {
             throw PathError.moreThan2PointsNeeded
         }
         
@@ -86,14 +84,14 @@ class ViewController: UIViewController {
         let path = UIBezierPath()
         let pathLayer = CAShapeLayer()
         
-        for (index,pathPoint) in arrPathPoints.enumerated() {
+        for (index,pathPoint) in rectPoints.enumerated() {
             switch index {
             //First point
             case 0:
                 path.move(to: pathPoint)
                 
             //Last point
-            case arrPathPoints.count - 1:
+            case rectPoints.count - 1:
                 path.addLine(to: pathPoint)
                 path.close()
                 
